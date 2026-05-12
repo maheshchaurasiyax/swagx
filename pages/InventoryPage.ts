@@ -1,26 +1,16 @@
 import { Page } from "@playwright/test";
 
-export class inventoryPage{
+export class InventoryPage{
 
     constructor(private page : Page){}
 
 
-async addProductToCart(){
+async addProductToCart(productName: string){
 
-    await this.page.click('text=Add to cart');
+    await this.page.click(
+        `[data-test="add-to-cart-${productName}"]`
+    );
 
-}
-
-async addBoltTshirt(){
-
-  await this.page.click(
-   '#add-to-cart-sauce-labs-bolt-t-shirt');
-
-}
-
-async addReadTshirt(){
-    await this.page.click('[data-test="add-to-cart-test.allthethings()-t-shirt-(red)"]'
-);
 }
 
 
@@ -46,5 +36,22 @@ async logout(){
     await this.page.click('#logout_sidebar_link');
     
 }
+
+async sortLowToHight(){
+
+    await this.page.selectOption('.select_container select', 'lohi');
+}
+
+
+async removeProductMultiple(productName : string){
+
+    await this.page.click(`[data-test="remove-${productName}"]`);
+}
+
+
+
+
+
+
 
 }
