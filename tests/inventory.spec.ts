@@ -7,6 +7,13 @@ import { testData } from '../utils/testData';
 
 let inventory : InventoryPage;
 
+test.beforeAll(async () => {
+
+   console.log('Inventory Test Execution Started');
+
+});
+
+
 test.beforeEach(async ({ page})=>{
   const login = new LoginPage(page);
 
@@ -18,11 +25,13 @@ test.beforeEach(async ({ page})=>{
 
 });
 
+test.afterEach(async({ page }, testInfo) =>{
 
+  console.log('Test Completed');
 
+  await page.screenshot({ path :`screenshots/${ testInfo.title}.png` });
 
-
-
+});
 
 test('Add Product to Cart', async ({ page }) =>{
 
@@ -41,16 +50,17 @@ await inventory.addProductToCart(
 await expect(
     page.locator('.shopping_cart_badge')).toHaveText('1');
     
-
     console.log('Product Add Successfully');
+
+    await inventory.logout();
+
   });
-
-
 
 
   //use of loop to add multiple product to cart 
 
 test('Add multiple product to cart', async ({page}) =>{
+
 
   const products = [
     'sauce-labs-backpack',
@@ -65,6 +75,9 @@ test('Add multiple product to cart', async ({page}) =>{
     await inventory.addProductToCart(product);
   }
   console.log(products.length + ' products added to cart successfully');
+
+  await inventory.logout();
+
 });
 
 
@@ -73,9 +86,7 @@ test('Add multiple product to cart', async ({page}) =>{
 /// Remove test case
 
 test('Remove Product From Cart', async({page}) =>{
-
    
-
 await inventory.addProductToCart( 'test.allthethings()-t-shirt-(red)'
 );
 
@@ -88,10 +99,9 @@ await expect(
 
 console.log('Product removed successfully');
 
+await inventory.logout();
+
 });
-
-
-
 
 
 
@@ -111,21 +121,24 @@ await expect(page.locator('.title')).toHaveText('Your Cart');
 console.log('Open cart verify sucessfully');
 
 
+await inventory.logout();
 
 });
+
+
 
 
 test('Sort product low to high', async({page}) =>{
 
   await inventory.sortLowToHight();
 
-
-
   await expect(
  page.locator('.product_sort_container')
 ).toHaveValue('lohi');
 
-});
+await inventory.logout();});
+
+
 
 test('Remove multiple product from cart', async({page}) =>{
 
@@ -150,10 +163,8 @@ for (const product of products){
 
   console.log('product removed successfully');
 }
-
+await inventory.logout();
 
 
 });
-
-
 
