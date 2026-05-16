@@ -1,48 +1,21 @@
-import{ test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
+import{ test, expect } from '../fixtures/baseTest';
 import { testData } from '../utils/testData';
 
 
 
-let inventory : InventoryPage;
+test('Add Product to Cart', async ({
 
-test.beforeAll(async () => {
-
-   console.log('Inventory Test Execution Started');
-
-});
-
-
-test.beforeEach(async ({ page})=>{
-  const login = new LoginPage(page);
-
-  inventory = new InventoryPage(page);
-
-  await login.goto();
-
-  await login.login(testData.username , testData.password);
-
-});
-
-test.afterEach(async({ page }, testInfo) =>{
-
-  console.log('Test Completed');
-
-  await page.screenshot({ path :`screenshots/${ testInfo.title}.png` });
-
-});
-
-test('Add Product to Cart', async ({ page }) =>{
-
+  page,
+  loginPage,
+  inventoryPage
   
+ }) =>{
+  
+
 //Add Product
-await inventory.addProductToCart(
+ await inventoryPage.addProductToCart(
    'sauce-labs-bolt-t-shirt'
 );
-
-
-//Verify cart badge
 
 //await expect(
  //page.locator('text=Remove')).toBeVisible();});
@@ -52,14 +25,24 @@ await expect(
     
     console.log('Product Add Successfully');
 
-    await inventory.logout();
+    await inventoryPage.logout();
 
   });
 
 
+
+
+
+
+
   //use of loop to add multiple product to cart 
 
-test('Add multiple product to cart', async ({page}) =>{
+test('Add multiple product to cart', async ({
+  page,
+  loginPage,
+  inventoryPage
+}) =>{
+
 
 
   const products = [
@@ -72,11 +55,11 @@ test('Add multiple product to cart', async ({page}) =>{
 
   for(const product of products){
 
-    await inventory.addProductToCart(product);
+    await inventoryPage.addProductToCart(product);
   }
   console.log(products.length + ' products added to cart successfully');
 
-  await inventory.logout();
+  await inventoryPage.logout();
 
 });
 
@@ -85,12 +68,18 @@ test('Add multiple product to cart', async ({page}) =>{
 
 /// Remove test case
 
-test('Remove Product From Cart', async({page}) =>{
+test('Remove Product From Cart', async({
+  page,
+  loginPage,
+  inventoryPage
+
+}) =>{
+
    
-await inventory.addProductToCart( 'test.allthethings()-t-shirt-(red)'
+await inventoryPage.addProductToCart( 'test.allthethings()-t-shirt-(red)'
 );
 
-await inventory.removeProduct();
+await inventoryPage.removeProduct();
 
 await expect(
  page.locator('text=Add to cart').first()
@@ -99,18 +88,22 @@ await expect(
 
 console.log('Product removed successfully');
 
-await inventory.logout();
+await inventoryPage.logout();
 
 });
 
 
 
-test('Open Cart', async({page}) =>{
+test('Open Cart', async({
+  page,
+  loginPage,
+  inventoryPage
 
-
-await inventory.addProductToCart( 'test.allthethings()-t-shirt-(red)'
+}) =>{
+  
+await inventoryPage.addProductToCart( 'test.allthethings()-t-shirt-(red)'
 );
-await inventory.openCart();
+await inventoryPage.openCart();
 
 await expect(
  page.locator('#checkout')
@@ -121,26 +114,39 @@ await expect(page.locator('.title')).toHaveText('Your Cart');
 console.log('Open cart verify sucessfully');
 
 
-await inventory.logout();
+await inventoryPage.logout();
 
 });
 
 
 
 
-test('Sort product low to high', async({page}) =>{
+test('Sort product low to high', async({
+  
+  page,
+  loginPage,
+  inventoryPage
 
-  await inventory.sortLowToHight();
+}) =>{
+
+
+  await inventoryPage.sortLowToHight();
 
   await expect(
  page.locator('.product_sort_container')
 ).toHaveValue('lohi');
 
-await inventory.logout();});
+await inventoryPage.logout();});
 
 
 
-test('Remove multiple product from cart', async({page}) =>{
+test('Remove multiple product from cart', async({
+  page,
+  loginPage,
+  inventoryPage
+}) =>{
+
+
 
   const products = [
     'sauce-labs-backpack',
@@ -151,19 +157,19 @@ test('Remove multiple product from cart', async({page}) =>{
 // Add multiple product to cart
 
 for(const product of products){
-  await inventory.addProductToCart(product);
+  await inventoryPage.addProductToCart(product);
 
 }
 
 // Remove multiple product from cart
 
 for (const product of products){
-  await inventory.removeProductMultiple(product);
+  await inventoryPage.removeProductMultiple(product);
 
 
   console.log('product removed successfully');
 }
-await inventory.logout();
+await inventoryPage.logout();
 
 
 });

@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 
 export class InventoryPage{
 
@@ -28,13 +28,22 @@ async openCart(){
 
 
 
+async logout() {
 
+   await this.page.click('#react-burger-menu-btn');
 
-async logout(){
+   const logoutBtn = this.page.locator(
+      '#logout_sidebar_link'
+   );
 
-    await this.page.click('#react-burger-menu-btn');
-    await this.page.click('#logout_sidebar_link');
-    
+   await logoutBtn.waitFor({
+      state: 'visible'
+   });
+
+   await this.page.waitForTimeout(500);
+
+   await logoutBtn.click();
+
 }
 
 async sortLowToHight(){

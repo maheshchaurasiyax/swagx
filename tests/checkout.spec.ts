@@ -1,70 +1,46 @@
-import { test , expect} from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
+import { test , expect } from '../fixtures/baseTest';
+
 import { CartPage } from '../pages/CartPage';
+
 import { testData } from '../utils/testData';
 
+test('Complet Checkout flow', async ({
+   page,
+   loginPage,
+   inventoryPage
+}) => {
 
+   const cart = new CartPage(page);
 
-/// use of beforeEach hook
+   
 
-let inventory : InventoryPage;
+   // Add Product
 
-let cart : CartPage;
+   await inventoryPage.addProductToCart(
+      'sauce-labs-bolt-t-shirt'
+   );
 
-test.beforeEach(async ({page}) =>{
+   // Open Cart
 
-    const login = new LoginPage(page);
+   await inventoryPage.openCart();
 
-    inventory = new InventoryPage(page);
+   // Checkout
 
-    cart  = new CartPage(page);
+   await cart.checkout(
+      'Mahesh',
+      'Kumar',
+      '221401'
+   );
 
-    await login.goto();
+   // Verify Success Message
 
-    await login.login(testData.username , testData.password);
+   const message =
+      await cart.getSuccessMessage();
+
+   console.log(message);
+
+   await expect(message)
+      .toContain('Thank you');
+
+      
 });
-
-
-
-
-
-
-
-
-
-
-
-test('Complet Checkout flow', async({page}) =>{
-
-//add product
-
-await inventory.addProductToCart(   'sauce-labs-bolt-t-shirt'
-);
-
-
-//Open cart
- await inventory.openCart();
-
-// await page.click('#checkout');
-
-// await expect(
-//  page.locator('#continue')
-// ).toBeEnabled();
-
-
-
-//CheckOut 
-await cart.checkout('Mahesh', 'Kumar', '221401');
-
-
-//Verify Success Message
-const Message = await cart.getSuccessMessage();
-
-console.log(Message);
-
-await expect(Message).toContain('Thank you');
-
-
-
-})

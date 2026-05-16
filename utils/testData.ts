@@ -1,8 +1,8 @@
 export const testData = {
 
-   username: 'standard_user',
+   username: process.env.USERNAMES!,
 
-   password: 'secret_sauce',
+   password: process.env.PASSWORDS!,
 
    firstname: 'Mahesh',
 

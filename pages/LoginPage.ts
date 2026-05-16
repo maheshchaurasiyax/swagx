@@ -1,13 +1,13 @@
-import { page, expect } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 export class LoginPage{
 
-    constructor(private page : page){}
+    constructor(private page : Page){}
 
 
 async goto(){
 
-    await this.page.goto('https://www.saucedemo.com/');
+    await this.page.goto('/');
 
 }
 
